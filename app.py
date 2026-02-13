@@ -21,13 +21,13 @@ def pg_principal():
     #executando a consulta       
     cursor.execute("SELECT codigo, cantor, duracao, nome, url_imagem, nome_genero FROM musica") 
 
-    d_musicas = cursor.fetchall()                                                                                                                       
+    musicas = cursor.fetchall()                                                                                                                       
 
     #fechando a conexao
     conexao.close()
 
 
-    return render_template("principal.html", musicas = d_musicas)
+    return render_template("principal.html", musicas = musicas)
 
 
 @app.route("/administracao")
