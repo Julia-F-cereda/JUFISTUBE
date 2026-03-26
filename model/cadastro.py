@@ -14,7 +14,7 @@ def conferir_usuario(nome:str, senha:str) ->list:
         usuario = cursor.fetchone()
         conexao.close()
 
-        return True
+        return usuario
     except Exception as erro:
         print(erro)
     return False

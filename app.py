@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash
 import mysql.connector
 from model.musica import recuperar_musicas
 from model.genero import recuperar_generos
@@ -89,12 +89,16 @@ def rota_login():
     usuario = conferir_usuario(nome, senha)
     if usuario:
         session["usuario_logado"] = usuario
+        flash("seja bem vindo, {usuario_nome}")
         return redirect("/admin")
     else:
+        flash("usuario ou senha invalida", "danger")
         return redirect("/login")
+    
 
 @app.route("/logout")
 def logout():
+    session.clear()
     return redirect("/admin")
 
 
