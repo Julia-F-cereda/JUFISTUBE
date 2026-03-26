@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 import mysql.connector
 from model.musica import recuperar_musicas
 from model.genero import recuperar_generos
@@ -9,6 +9,8 @@ from model.cadastro import inserir_usuario
 from model.cadastro import conferir_usuario
 
 app = Flask(__name__)
+
+app.secret_key = "chocolate"
 
 @app.route("/home", methods=["GET"])
 @app.route("/")
@@ -24,6 +26,8 @@ def pg_principal():
 
 @app.route("/admin")
 def pg_administracao():
+    if "usuario_logado" not in session:
+        return redirect ("/login")
     musicas = recuperar_musicas()
     generos = recuperar_generos()
     return render_template("administracao.html", musicas = musicas, generos = generos)
@@ -71,17 +75,28 @@ def rota_cadastro():
             pass
     except Exception as erro:
         print (erro)
-        
+
+@app.route("/login")
+def login_usuario():
+    if "usuario_logado" in session:
+        return redirect ("/admin")
+    return render_template("login.html")
+
 @app.route("/login", methods=["POST"])
 def rota_login():
     nome = request.form.get("nome")
     senha = request.form.get("senha")
     usuario = conferir_usuario(nome, senha)
     if usuario:
+        session["usuario_logado"] = usuario
         return redirect("/admin")
     else:
         return redirect("/login")
-    
+
+@app.route("/logout")
+def logout():
+    return redirect("/admin")
+
 
 
 if __name__ == "__main__":
