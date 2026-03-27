@@ -1,3 +1,4 @@
 flask
 render_template
 mysql-connector-python
+gunicorn
